@@ -16,6 +16,8 @@ class ContactAdapter(private val listener: OnItemClickListener) :
     interface OnItemClickListener {
         fun onEditClick(position: Int)
         fun onDeleteClick(position: Int)
+        fun onCallClick(position: Int)
+        fun onMessageClick(position: Int)
     }
 
     fun submitSearchedList(list: List<Contact>) {
@@ -41,6 +43,9 @@ class ContactAdapter(private val listener: OnItemClickListener) :
         private val number: TextView = itemView.findViewById(R.id.tvNumber)
         private val editImageView: ImageView = itemView.findViewById(R.id.ivEdit)
         private val deleteImageView: ImageView = itemView.findViewById(R.id.ivDelete)
+        private val callImageView: ImageView = itemView.findViewById(R.id.ivCall)
+        private val messageImageView: ImageView = itemView.findViewById(R.id.ivMessage)
+
 
         fun bind(contact: Contact) {
             name.text = contact.name
@@ -53,6 +58,15 @@ class ContactAdapter(private val listener: OnItemClickListener) :
             deleteImageView.setOnClickListener {
                 listener.onDeleteClick(adapterPosition)
             }
+
+            callImageView.setOnClickListener {
+                listener.onCallClick(adapterPosition)
+            }
+
+            messageImageView.setOnClickListener {
+                listener.onMessageClick(adapterPosition)
+            }
+
         }
 
         companion object {

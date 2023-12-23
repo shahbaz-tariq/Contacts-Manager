@@ -1,6 +1,7 @@
 package com.example.contacts
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SearchView
@@ -59,6 +60,24 @@ class MainActivity : AppCompatActivity(), ContactAdapter.OnItemClickListener {
             intent.putExtra("type", "addMode")
             startActivityForResult(intent, 1)
         }
+    }
+
+    override fun onCallClick(position: Int) {
+        val contact = adapter.getContact(position)
+        val phoneNumber = contact.number
+
+        // Launch the phone dialer with the specified phone number
+        val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
+        startActivity(dialIntent)
+    }
+
+    override fun onMessageClick(position: Int) {
+        val contact = adapter.getContact(position)
+        val phoneNumber = contact.number
+
+        // Launch the messaging app with the specified phone number
+        val messageIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null))
+        startActivity(messageIntent)
     }
 
     override fun onEditClick(position: Int) {
