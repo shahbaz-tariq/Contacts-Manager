@@ -1,5 +1,6 @@
 package com.example.contacts.data
 
+import androidx.lifecycle.LiveData
 import com.example.contacts.model.Contact
 import kotlinx.coroutines.flow.Flow
 
@@ -19,6 +20,10 @@ class ContactRepo(private val contactDao: ContactDao) {
 
     fun getAllContacts(): Flow<List<Contact>> {
         return contactDao.getAllContacts()
+    }
+
+    fun searchContacts(searchQuery: String): Flow<List<Contact>> {
+        return contactDao.searchContacts("%$searchQuery%")
     }
 
 }

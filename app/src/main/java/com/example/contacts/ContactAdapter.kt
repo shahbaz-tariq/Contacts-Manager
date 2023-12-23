@@ -18,6 +18,10 @@ class ContactAdapter(private val listener: OnItemClickListener) :
         fun onDeleteClick(position: Int)
     }
 
+    fun submitSearchedList(list: List<Contact>) {
+        submitList(list)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         return ContactViewHolder.create(parent, listener)
     }
@@ -62,11 +66,12 @@ class ContactAdapter(private val listener: OnItemClickListener) :
 
     class ContactComparator : DiffUtil.ItemCallback<Contact>() {
         override fun areItemsTheSame(oldItem: Contact, newItem: Contact): Boolean {
-            return oldItem === newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Contact, newItem: Contact): Boolean {
-            return oldItem.name == newItem.name
+            return oldItem.name == newItem.name && oldItem.number == newItem.number
         }
     }
+
 }

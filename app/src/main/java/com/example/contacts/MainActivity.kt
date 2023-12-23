@@ -3,15 +3,19 @@ package com.example.contacts
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.contacts.databinding.ActivityMainBinding
 import com.example.contacts.model.Contact
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), ContactAdapter.OnItemClickListener {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var searchView: SearchView
     private val contactViewModel: ContactViewModel by viewModels {
         ContactViewModel.ContactViewModelFactory((application as ContactApplication).repository)
     }
@@ -30,6 +34,25 @@ class MainActivity : AppCompatActivity(), ContactAdapter.OnItemClickListener {
         contactViewModel.allContacts.observe(this) { contact ->
             contact?.let { adapter.submitList(it) }
         }
+
+        lifecycleScope.launch {
+            contactViewModel.searchedContactsFlow.collect { searchedContacts ->
+                adapter.submitSearchedList(searchedContacts)
+            }
+        }
+
+        searchView = findViewById(R.id.searchView)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { contactViewModel.searchContacts(it) }
+                return true
+            }
+        })
 
         binding.fab.setOnClickListener {
             val intent = Intent(this@MainActivity, AddContact::class.java)

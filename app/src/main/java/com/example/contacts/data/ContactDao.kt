@@ -1,5 +1,6 @@
 package com.example.contacts.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -21,7 +22,10 @@ interface ContactDao {
     @Delete
     suspend fun delete(contact: Contact)
 
-    @Query("SELECT * FROM contact")
+    @Query("SELECT * FROM contact ORDER BY name ASC")
     fun getAllContacts(): Flow<List<Contact>>
+
+    @Query("SELECT * FROM contact WHERE name LIKE :searchQuery")
+    fun searchContacts(searchQuery: String): Flow<List<Contact>>
 
 }

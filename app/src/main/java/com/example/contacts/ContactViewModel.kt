@@ -7,11 +7,22 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.contacts.data.ContactRepo
 import com.example.contacts.model.Contact
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ContactViewModel(private val repository: ContactRepo): ViewModel() {
 
     val allContacts: LiveData<List<Contact>> = repository.getAllContacts().asLiveData()
+
+    private val _searchedContactsFlow = MutableStateFlow<List<Contact>>(emptyList())
+    val searchedContactsFlow: StateFlow<List<Contact>> get() = _searchedContactsFlow
+
+    // Using StateFlow to expose the Flow as a LiveData
+    fun searchContacts(query: String) = viewModelScope.launch {
+        repository.searchContacts(query)
+            .collect { _searchedContactsFlow.value = it }
+    }
 
     fun insert(contact: Contact) = viewModelScope.launch {
         repository.insert(contact)
