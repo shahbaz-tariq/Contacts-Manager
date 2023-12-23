@@ -22,7 +22,7 @@ interface ContactDao {
     @Delete
     suspend fun delete(contact: Contact)
 
-    @Query("SELECT * FROM contact ORDER BY name ASC")
+    @Query("SELECT * FROM contact ORDER BY LOWER(name) ASC")
     fun getAllContacts(): Flow<List<Contact>>
 
     @Query("SELECT * FROM contact WHERE name LIKE :searchQuery")

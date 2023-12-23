@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), ContactAdapter.OnItemClickListener {
             }
         }
 
-        searchView = findViewById(R.id.searchView)
+        searchView = binding.searchView
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
